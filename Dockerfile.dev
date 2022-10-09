@@ -1,7 +1,7 @@
 FROM node:18
 
-RUN mkdir /suna
+RUN mkdir -p /suna
 
 WORKDIR /suna
 
-CMD ["npm", "run", "nodemon"]
+CMD ["npm", "run", "debug"]
