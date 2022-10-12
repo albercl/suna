@@ -1,38 +1,37 @@
 {
-  "name": "suna",
-  "version": "0.0.1",
-  "description": "A discord bot written in TypeScript",
-  "main": "Index.ts",
-  "scripts": {
-    "test": "test",
-    "build": "tsc",
-    "start": "node dist/Index.js",
-    "debug": "nodemon --legacy-watch --watch src --exec node --inspect=0.0.0.0:9229 --inspect-brk -r ts-node/register src/Index.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/albercl/suna.git"
-  },
-  "keywords": [
-    "discord"
-  ],
-  "author": "albercl",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/albercl/suna/issues"
-  },
-  "homepage": "https://github.com/albercl/suna#readme",
-  "dependencies": {
-    "discord.js": "^14.5.0",
-    "typescript": "^4.8.4",
-    "winston": "^3.8.2"
-  },
-  "devDependencies": {
-    "@types/node": "^18.8.0",
-    "eslint": "^8.25.0",
-    "jest": "^29.1.2",
-    "nodemon": "^2.0.20",
-    "prettier": "^2.7.1",
-    "ts-node": "^10.9.1"
-  }
+    "name": "suna",
+    "version": "0.0.1",
+    "description": "A discord bot written in TypeScript",
+    "main": "Index.ts",
+    "scripts": {
+        "test": "test",
+        "build": "tsc",
+        "start": "node dist/Index.js",
+        "debug": "nodemon --legacy-watch --watch src --exec node --inspect=0.0.0.0:9229 --inspect-brk -r ts-node/register src/Index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/albercl/suna.git"
+    },
+    "keywords": [
+        "discord"
+    ],
+    "author": "albercl",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/albercl/suna/issues"
+    },
+    "homepage": "https://github.com/albercl/suna#readme",
+    "dependencies": {
+        "discord.js": "^14.5.0",
+        "winston": "^3.8.2"
+    },
+    "devDependencies": {
+        "@types/node": "^18.8.0",
+        "eslint": "^8.24.0",
+        "jest": "^29.1.2",
+        "nodemon": "^2.0.20",
+        "ts-node": "^10.9.1",
+        "typescript": "^4.8.4"
+    }
 }

@@ -4,7 +4,6 @@ const { printf } = format;
 let logger_format = printf((info) => {
     let msg = `${info.timestamp} [${info.level}] ${info.message}`;
 
-    let splat = Symbol('splat');
     if (info.metadata) {
         msg += '\n' + JSON.stringify(info.metadata, null, 4);
     }
