@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   build:
@@ -22,10 +20,12 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Push docker image
-        uses: docker/build-push-action@v1
+      - name: Build and push docker image
+      # uses: docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5
+        uses: docker/build-push-action@v3.2.0
         with:
           context: .
           file: ./Dockerfile
-
-
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/suna:latest
+          
