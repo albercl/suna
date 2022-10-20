@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-node@v3.5.1
         with:
           node-version: 18.x
+      - name: Install dependencies
+        run: npm install
       - name: Build Typescript code
         run: npm run build
       - name: Run tests
