@@ -9,8 +9,7 @@ on:
     branches: [ development ]
     
 jobs:
-  build:
-  
+  test:
     runs-on: ubuntu-latest
     
     steps:
