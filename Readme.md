@@ -1,9 +1,14 @@
 # Suna
 
+![](https://github.com/albercl/suna/actions/workflows/docker-image.yml/badge.svg)
+![](https://github.com/albercl/suna/actions/workflows/test-development.yml/badge.svg)
+
 - [Install](#install)
 - [Debug](#debug)
 
 ## Install
+
+
 
 ## Debug
 
