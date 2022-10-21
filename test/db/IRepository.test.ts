@@ -84,11 +84,9 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
             it('update field of entity', async () => {
                 let myentity = { ...entity2 };
-                console.log(myentity);
 
                 myentity = await repo.create(myentity);
                 myentity.username = 'albertocl';
-                console.log(myentity);
                 await repo.update(myentity);
 
                 let updatedEntity = await repo.getById(myentity.id!);
