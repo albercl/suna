@@ -1,29 +1,16 @@
-import { TextChannel, User } from 'discord.js';
+import { Message, TextChannel, User } from 'discord.js';
 
 /**
  * Stores all the information relative to a command event as:
  * user, channel, message or command args.
  */
 export default interface ICommandEvent {
-    /**
-     * Get the user
-     * @returns user
-     */
-    get user(): User;
-
-    /**
-     * Get the text channel
-     * @returns TextChannel
-     */
-    get channel(): TextChannel;
-    /**
-     * Get the message
-     * @returns string
-     */
-    get message(): string;
-    /**
-     * Get the command args
-     * @returns string
-     */
-    get args(): string[];
+    // The user who executed the command
+    user: User;
+    // The channel where the command was executed
+    channel: TextChannel;
+    // The complete message of the command event
+    message: Message;
+    // The args of the command
+    args: string[];
 }
