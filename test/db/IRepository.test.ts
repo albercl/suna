@@ -1,4 +1,4 @@
-import { rmdirSync } from 'fs';
+import { rmSync } from 'fs';
 import path from 'path';
 import IEntity from '../../src/db/IEntity';
 import IRepository from '../../src/db/IRepository';
@@ -49,7 +49,7 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
 
             it('undefined reference', async () => {
-                expect(repo.create(undefined as any)).rejects.toThrow();
+                await expect(repo.create(undefined as any)).rejects.toThrow();
             });
         });
 
@@ -222,7 +222,10 @@ describe('JsonRepository', () => {
 
         it('create repository when no db directory is present', () => {
             try {
-                rmdirSync(path.join(process.cwd(), '.jsondb_test'));
+                rmSync(path.join(process.cwd(), '.jsondb_test'), {
+                    recursive: true,
+                    force: true,
+                });
             } catch (e) {}
 
             repo = new JsonRepository(

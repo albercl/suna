@@ -104,6 +104,7 @@ dist
 .tern-port
 
 # Custom
+.idea/
 .jsondb/
 .jsondb_test/
 package-lock.json
