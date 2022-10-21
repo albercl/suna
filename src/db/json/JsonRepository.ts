@@ -6,20 +6,14 @@ import IRepository from '../IRepository';
 export default class JsonRepository<E extends IEntity<number>>
     implements IRepository<number, E>
 {
-    public static readonly DB_BASE_PATH = '.jsondb';
-
     private readonly dbPath;
     private map: Map<number, E> = new Map();
     private nextId: number = 0;
 
-    constructor(entityName: string) {
-        this.dbPath = path.join(
-            process.cwd(),
-            JsonRepository.DB_BASE_PATH,
-            entityName + '.json'
-        );
+    constructor(dbBasePath: string, entityName: string) {
+        this.dbPath = path.join(dbBasePath, entityName + '.json');
 
-        const directory = path.join(process.cwd(), JsonRepository.DB_BASE_PATH);
+        const directory = dbBasePath;
         if (!existsSync(directory)) {
             mkdirSync(directory);
         }
@@ -92,11 +86,7 @@ export default class JsonRepository<E extends IEntity<number>>
         }
 
         let result = this.map.delete(entity.id);
-
-        if (result) {
-            this.persist();
-            return result;
-        }
+        this.persist();
 
         return result;
     }

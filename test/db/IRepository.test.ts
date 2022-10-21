@@ -1,3 +1,5 @@
+import { rmdirSync } from 'fs';
+import path from 'path';
 import IEntity from '../../src/db/IEntity';
 import IRepository from '../../src/db/IRepository';
 import JsonRepository from '../../src/db/json/JsonRepository';
@@ -103,6 +105,12 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                     `The provided entity doesn't have a key!`
                 );
             });
+
+            it('update undefined entity', async () => {
+                await expect(() =>
+                    repo.update(undefined as any)
+                ).rejects.toThrowError();
+            });
         });
 
         describe('delete()', () => {
@@ -124,13 +132,17 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 expect(myentity).toBeNull();
             });
 
-            it('update entity with undefined key', async () => {
+            it('delete undefined entity', async () => {
+                await expect(() =>
+                    repo.delete(undefined as any)
+                ).rejects.toThrowError();
+            });
+
+            it('delete entity with undefined key', async () => {
                 let deleteAction = async () => {
-                    await repo.update(entity3);
+                    await repo.delete(entity3);
                 };
-                await expect(deleteAction).rejects.toThrowError(
-                    `The provided entity doesn't have a key!`
-                );
+                await expect(deleteAction).rejects.toThrowError();
             });
         });
 
@@ -199,7 +211,26 @@ describe('JsonRepository', () => {
     describe(
         'generic tests',
         genericTestSuite<JsonRepository<TestEntity>>(
-            () => new JsonRepository('testEntity')
+            () =>
+                new JsonRepository(
+                    path.join(process.cwd(), '.jsondb_test'),
+                    'TestEntity'
+                )
         )
     );
+
+    describe('concrete tests', () => {
+        let repo: JsonRepository<TestEntity>;
+
+        it('create repository when no db directory is present', () => {
+            try {
+                rmdirSync(path.join(process.cwd(), '.jsondb_test'));
+            } catch (e) {}
+
+            repo = new JsonRepository(
+                path.join(process.cwd(), '.jsondb_test'),
+                'TestEntity'
+            );
+        });
+    });
 });

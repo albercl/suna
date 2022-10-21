@@ -105,4 +105,5 @@ dist
 
 # Custom
 .jsondb/
+.jsondb_test/
 package-lock.json
