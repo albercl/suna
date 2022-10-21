@@ -1,5 +1,6 @@
 import IEntity from '../../src/db/IEntity';
 import IRepository from '../../src/db/IRepository';
+import JsonRepository from '../../src/db/json/JsonRepository';
 import TmpRepository from '../../src/db/tmp/TmpRepository';
 
 interface TestEntity extends IEntity<number> {
@@ -46,7 +47,7 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
 
             it('undefined reference', async () => {
-                await repo.create(undefined as any);
+                expect(repo.create(undefined as any)).rejects.toThrow();
             });
         });
 
@@ -80,10 +81,12 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 repo = repoBuilder();
             });
             it('update field of entity', async () => {
-                let myentity = Object.create(entity2) as TestEntity;
+                let myentity = { ...entity2 };
+                console.log(myentity);
 
-                myentity = (await repo.create(myentity))!;
+                myentity = await repo.create(myentity);
                 myentity.username = 'albertocl';
+                console.log(myentity);
                 await repo.update(myentity);
 
                 let updatedEntity = await repo.getById(myentity.id!);
@@ -108,7 +111,7 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 repo = repoBuilder();
             });
             it('delete existing entity', async () => {
-                let myentity = await repo.create(entity2);
+                let myentity: TestEntity | null = await repo.create(entity2);
                 expect(myentity!.id).not.toBe(null);
 
                 myentity = await repo.getById(myentity!.id!);
@@ -171,9 +174,11 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
 
             it('get random number of entries', async () => {
+                await repo.deleteAll();
+
                 let numberOfEntries = Math.floor(Math.random() * 50);
                 for (let i = 0; i < numberOfEntries; i++) {
-                    await repo.create(entity1);
+                    await repo.create({ ...entity1 });
                 }
 
                 let entities = await repo.getAll();
@@ -184,17 +189,13 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
 }
 
 describe('TmpRepository', () => {
-    const tmpRepo = new TmpRepository<TestEntity>();
-
     describe(
         'generic tests',
         genericTestSuite<TmpRepository<TestEntity>>(() => new TmpRepository())
     );
 });
 
-/* describe('JsonRepository', () => {
-    const tmpRepo = new TmpRepository<TestEntity>();
-
+describe('JsonRepository', () => {
     describe(
         'generic tests',
         genericTestSuite<JsonRepository<TestEntity>>(
@@ -202,4 +203,3 @@ describe('TmpRepository', () => {
         )
     );
 });
- */

@@ -32,7 +32,7 @@ export default interface IRepository<K, E extends IEntity<K>> {
      * @returns The same entity reference received as parameter
      * @throws Error when an entity is already associated with this key
      */
-    create(entity: E): Promise<E | null>;
+    create(entity: E): Promise<E>;
 
     /**
      * Updates an entity that is already registered
@@ -45,6 +45,7 @@ export default interface IRepository<K, E extends IEntity<K>> {
      * Delete the given entity from the repository
      * @param  {E} entity Entity to delete
      * @returns True if the operation completed
+     * @throws Error when the entity doesn't exists or the key isn't valid
      */
     delete(entity: E): Promise<boolean>;
 
