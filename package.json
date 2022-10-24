@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node -r source-map-support/register dist/Index.js",
-        "test": "jest --run-in-band",
+        "test": "jest",
         "debug": "nodemon --legacy-watch --watch src --exec node --inspect=0.0.0.0:9229 --inspect-brk -r ts-node/register src/Index.ts"
     },
     "repository": {
