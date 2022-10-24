@@ -49,7 +49,9 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
 
             it('undefined reference', async () => {
-                await expect(repo.create(undefined as any)).rejects.toThrow();
+                await expect(
+                    repo.create(undefined as unknown as TestEntity)
+                ).rejects.toThrow();
             });
         });
 
@@ -59,18 +61,21 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 repo = repoBuilder();
             });
             it('undefined key', async () => {
-                let result = await repo.getById(undefined as any);
+                const result = await repo.getById(
+                    undefined as unknown as number
+                );
+
                 expect(result).toBe(null);
             });
 
             it('entity not present in repository', async () => {
-                let result = await repo.getById(-1);
+                const result = await repo.getById(-1);
                 expect(result).toBe(null);
             });
 
             it('get created entity', async () => {
                 await repo.create(entity2);
-                let result = await repo.getById(entity2.id!);
+                const result = await repo.getById(entity2.id!);
 
                 expect(result!.id).toBe(entity2.id);
                 expect(result?.username).toBe(entity2.username);
@@ -89,24 +94,24 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 myentity.username = 'albertocl';
                 await repo.update(myentity);
 
-                let updatedEntity = await repo.getById(myentity.id!);
+                const updatedEntity = await repo.getById(myentity.id!);
                 expect(updatedEntity?.username).toBe(myentity.username);
                 expect(updatedEntity?.username).not.toBe(entity2.username);
             });
 
             it('update entity with undefined key', async () => {
-                let updateAction = async () => {
+                const updateAction = async () => {
                     await repo.update(entity3);
                 };
 
                 await expect(updateAction).rejects.toThrow(
-                    `The provided entity doesn't have a key!`
+                    "The provided entity doesn't have a key!"
                 );
             });
 
             it('update undefined entity', async () => {
                 await expect(() =>
-                    repo.update(undefined as any)
+                    repo.update(undefined as unknown as TestEntity)
                 ).rejects.toThrowError();
             });
         });
@@ -123,7 +128,7 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
                 myentity = await repo.getById(myentity!.id!);
                 expect(myentity).not.toBeNull();
 
-                let result = await repo.delete(myentity!);
+                const result = await repo.delete(myentity!);
                 expect(result).toBe(true);
 
                 myentity = await repo.getById(myentity!.id!);
@@ -132,12 +137,12 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
 
             it('delete undefined entity', async () => {
                 await expect(() =>
-                    repo.delete(undefined as any)
+                    repo.delete(undefined as unknown as TestEntity)
                 ).rejects.toThrowError();
             });
 
             it('delete entity with undefined key', async () => {
-                let deleteAction = async () => {
+                const deleteAction = async () => {
                     await repo.delete(entity3);
                 };
                 await expect(deleteAction).rejects.toThrowError();
@@ -152,10 +157,10 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
 
             it('delete all entities', async () => {
                 await repo.create(entity2);
-                let result = await repo.deleteAll();
+                const result = await repo.deleteAll();
                 expect(result).toBe(true);
 
-                let entities = await repo.getAll();
+                const entities = await repo.getAll();
                 expect(entities.length).toBe(0);
             });
         });
@@ -167,12 +172,12 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             });
 
             it('get random number of keys', async () => {
-                let numberOfEntries = Math.floor(Math.random() * 50);
+                const numberOfEntries = Math.floor(Math.random() * 50);
                 for (let i = 0; i < numberOfEntries; i++) {
                     await repo.create(entity1);
                 }
 
-                let keys = await repo.getAllKeys();
+                const keys = await repo.getAllKeys();
                 expect(keys.length).toBe(numberOfEntries);
             });
         });
@@ -186,12 +191,12 @@ function genericTestSuite<R extends IRepository<number, TestEntity>>(
             it('get random number of entries', async () => {
                 await repo.deleteAll();
 
-                let numberOfEntries = Math.floor(Math.random() * 50);
+                const numberOfEntries = Math.floor(Math.random() * 50);
                 for (let i = 0; i < numberOfEntries; i++) {
                     await repo.create({ ...entity1 });
                 }
 
-                let entities = await repo.getAll();
+                const entities = await repo.getAll();
                 expect(entities.length).toBe(numberOfEntries);
             });
         });
@@ -217,7 +222,8 @@ describe('JsonRepository', () => {
         )
     );
 
-    describe('concrete tests', () => {
+    describe('specific tests', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let repo: JsonRepository<TestEntity>;
 
         it('create repository when no db directory is present', () => {

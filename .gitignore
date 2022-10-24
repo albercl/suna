@@ -108,3 +108,5 @@ dist
 .jsondb/
 .jsondb_test/
 package-lock.json
+
+config.json

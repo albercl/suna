@@ -1,5 +1,6 @@
 import { createLogger, format, Logger, transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+
 const { printf } = format;
 
 /**
@@ -31,10 +32,10 @@ export default class LoggerFactory {
      * @returns a new logger associated to the file
      */
     public getLogger(): Logger {
-        let stackTrace = new Error().stack!;
+        const stackTrace = new Error().stack!;
 
         // Get the file where the logger was created
-        let file = stackTrace.split('\n')[1].split('/').pop()!.split(':')[0];
+        const file = stackTrace.split('\n')[1].split('/').pop()!.split(':')[0];
 
         return createLogger({
             level: 'debug',
@@ -55,11 +56,15 @@ export default class LoggerFactory {
                 }),
                 new DailyRotateFile({
                     level: 'info',
-                    filename: 'logs/%DATE%.log',
+                    filename: 'logs/%DATE%',
                     datePattern: 'YYYY-MM-DD',
                     zippedArchive: true,
-                    maxSize: '10m',
+                    maxSize: '7m',
                     maxFiles: '14d',
+                    auditFile: 'logs/audit.json',
+                    extension: '.log',
+                    createSymlink: true,
+                    symlinkName: 'latest.log',
                 }),
             ],
         });

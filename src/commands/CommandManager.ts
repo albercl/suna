@@ -1,11 +1,15 @@
 import ICommand from './ICommand';
+import { Message } from 'discord.js';
+import ICommandEvent from './ICommandEvent';
+import LoggerFactory from '../utils/LoggerFactory';
 
 export default class CommandManager {
     private static instance: CommandManager;
+    private static readonly PREFIX = 's!';
 
     private constructor() {}
 
-    public get Instance() {
+    public static get Instance() {
         if (!CommandManager.instance) {
             CommandManager.instance = new CommandManager();
         }
@@ -13,6 +17,7 @@ export default class CommandManager {
         return CommandManager.instance;
     }
 
+    private logger = LoggerFactory.Instance.getLogger();
     private commandCollection: Map<string, ICommand> = new Map();
 
     public registerCommand(cmd: ICommand) {
@@ -23,12 +28,32 @@ export default class CommandManager {
         this.commandCollection.delete(cmd.name);
     }
 
-    public runCommand(cmdName: string) {
-        let cmd = this.commandCollection.get(cmdName);
+    /**
+     * Try to execute a command searching it in the command collection.
+     * @param message discord message object
+     * @returns true if the message contains a valid command or false in other way
+     */
+    public tryRunCommand(message: Message): boolean {
+        if (!message.content.startsWith(CommandManager.PREFIX)) return false;
+
+        // Extract args from content
+        const args = message.content.split(' ');
+        args[0] = args[0].substring(2, args[0].length);
+
+        const cmd = this.commandCollection.get(args[0]);
         if (!cmd) {
-            throw new Error("The introduced command doesn't exists");
+            return false;
         }
-        // TODO: Pass {@link ICommandEvent} as argument
-        cmd.execute(undefined as any);
+
+        // Construct event
+        const event: ICommandEvent = {
+            args,
+            message,
+            user: message.author,
+            channel: message.channel,
+        };
+
+        cmd.execute(event).catch((e) => this.logger.error(e.message, e));
+        return true;
     }
 }

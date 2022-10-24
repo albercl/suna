@@ -2,62 +2,60 @@ import StatusCommand from '../../../src/commands/dev/StatusCommand';
 import ICommandEvent from '../../../src/commands/ICommandEvent';
 import { Message, TextChannel, User } from 'discord.js';
 
-jest.mock('discord.js');
+jest.mock('../../../src/config/Config', () => {
+    return {
+        token: '',
+        developers: ['12345'],
+    };
+});
+
+function getEvent(
+    id: string | undefined,
+    msgObj: { msg?: string }
+): ICommandEvent {
+    return {
+        args: ['status'],
+        user: {
+            id: {
+                toString: () => id,
+            },
+        } as unknown as User,
+        message: {
+            reply: async (str: string): Promise<void> => {
+                msgObj.msg = str;
+            },
+        } as unknown as Message,
+        channel: {} as TextChannel,
+    };
+}
 
 describe('Status command', () => {
-    it('Run command with startup time 2 seconds', async () => {
-        const cmd = new StatusCommand('status', 'This is the status command');
-        let replyStr: string;
-        const message = {
-            reply: async (str: string) => {
-                replyStr = str;
-                return;
-            },
-        };
-
-        let event: ICommandEvent = {
-            args: ['status'],
-            user: {} as User,
-            message: message as any as Message,
-            channel: {} as TextChannel,
-        };
-
-        let p = new Promise<void>((resolve) => {
-            setTimeout(async () => {
-                await cmd.execute(event);
-                resolve();
-            }, 2000);
-        });
-
-        await p;
-
-        expect(replyStr!).toBe('Bot version: 0.1\nTime running: 0:0:2');
-    });
+    const cmd = new StatusCommand('status', 'This is the status command');
 
     it('Run command with startup time 0 seconds', async () => {
-        const cmd = new StatusCommand('status', 'This is the status command');
-        let replyStr: string;
-        const message = {
-            reply: async (str: string) => {
-                replyStr = str;
-                return;
-            },
-        };
+        const msgObj = { msg: undefined };
+        const event = getEvent('12345', msgObj);
 
-        let event: ICommandEvent = {
-            args: ['status'],
-            user: {} as User,
-            message: message as any as Message,
-            channel: {} as TextChannel,
-        };
+        await cmd.execute(event).then();
 
-        let p = new Promise<void>(async (resolve) => {
-            await cmd.execute(event);
-            resolve();
-        });
+        expect(msgObj.msg).toBe('Bot version: 0.1\nTime running: 00:00:00');
+    });
 
-        await p;
+    it('Try run with unauthorized user', async () => {
+        const msgObj = { msg: undefined };
+        const event = getEvent('123', msgObj);
 
-        expect(replyStr!).toBe('Bot version: 0.1\nTime running: 0:0:0');
+        await cmd.execute(event);
+
+        expect(msgObj.msg).toBeUndefined();
+    });
+
+    it('Try to run with undefined user', async () => {
+        const msgObj = { msg: undefined };
+        const event = getEvent(undefined, msgObj);
+
+        await cmd.execute(event);
+
+        expect(msgObj.msg).toBeUndefined();
     });
 });

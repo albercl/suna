@@ -7,7 +7,6 @@
         "inlineSources": true,
         "strict": true,
         "moduleResolution": "NodeNext",
-        "resolveJsonModule": true,
         "esModuleInterop": true
     },
     "include": [

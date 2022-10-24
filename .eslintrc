@@ -1,0 +1,67 @@
+{
+  "root": true,
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "linebreak-style": [
+      "warn",
+      "unix"
+    ],
+    "no-empty": "off",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "format": [
+          "camelCase"
+        ],
+        "selector": "default"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "typeLike"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "accessor"
+      },
+      {
+        "format": [
+          "UPPER_CASE"
+        ],
+        "selector": "classProperty",
+        "modifiers": [
+          "static",
+          "readonly"
+        ]
+      },
+      {
+        "format": [
+          "UPPER_CASE",
+          "camelCase"
+        ],
+        "selector": "variable",
+        "modifiers": [
+          "const"
+        ]
+      },
+      {
+        "format": [
+          "UPPER_CASE"
+        ],
+        "selector": "enum"
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-empty-function": "off"
+  }
+}
