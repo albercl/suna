@@ -1,5 +1,6 @@
 import { createLogger, format, Logger, transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import { currentDateToString } from './Utils';
 
 const { printf } = format;
 
@@ -42,7 +43,7 @@ export default class LoggerFactory {
             format: format.combine(
                 format.metadata(),
                 format.timestamp({
-                    format: 'YYYY-MM-DD hh:mm:ss',
+                    format: currentDateToString,
                 }),
                 this.getLoggerFormatter(file)
             ),
